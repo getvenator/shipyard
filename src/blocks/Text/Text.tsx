@@ -33,7 +33,11 @@ const Settings: React.FC<TextBlockSettings> = (
             <h2>Text block settings</h2>
 
             <label>Text</label>
-            <input id={textId} type='text' />
+            <input
+                onChange={(event) => onChangeValue('text', event.target.value)}
+                id={textId}
+                type='text'
+            />
         </div>
     )
 }

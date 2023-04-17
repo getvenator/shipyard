@@ -4,6 +4,13 @@ export type BlockType = 'Text'
 
 export type BlockId = string
 
+export type PropertyType<T, K extends keyof T> = T[K];
+
+export type OnChangeValue<T> = <K extends keyof T>(
+    key: K,
+    value: PropertyType<T, K>
+) => void;
+
 export interface BaseBlockConfig {
     paddingLeft: number
     paddingRight: number

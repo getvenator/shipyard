@@ -1,8 +1,9 @@
-import React, {useState} from "react";
+import React, {useCallback, useState} from "react";
 import styled from "styled-components";
 import {Block, BlockId} from "./types";
 import {Text} from "./blocks";
 import {isTextBlock, TextBlock} from "./blocks/Text/types";
+import { useImmer } from "use-immer";
 
 const renderDynamicBlock = (block: Block) => {
     if (isTextBlock(block)) {
@@ -12,16 +13,8 @@ const renderDynamicBlock = (block: Block) => {
     return null;
 }
 
-const renderDynamicBlockSettings = (block: Block) => {
-    if (isTextBlock(block)) {
-        return <Text.Settings onChangeValue={() => {}} {...block.config} />
-    }
-
-    return null;
-}
-
 const App: React.FC = () => {
-    const [blocks, setBlocks] = useState<Block[]>([
+    const [blocks, setBlocks] = useImmer<Block[]>([
         {
             id: '1',
             type: 'Text',
@@ -32,6 +25,26 @@ const App: React.FC = () => {
     ])
     const [settingsBlock, setSettingsBlock] = useState<BlockId | null>('1')
 
+    const renderDynamicBlockSettings = useCallback(() => {
+        const block = blocks.find((block) => block.id === settingsBlock)
+
+        if (!block) {
+            // todo: return global settings
+            return null
+        }
+
+        if (isTextBlock(block)) {
+            return (
+                <Text.Settings onChangeValue={(key, value) => {
+                    setBlocks((draft) => {
+                        const newBlock = draft.find((draftBlock) => draftBlock.id === block.id) as TextBlock;
+                        newBlock.config[key] = value;
+                    });
+                }} {...block.config} />
+            )
+        }
+    }, [])
+
     return (
         <StyledApp>
             {blocks.map((block) => (
@@ -41,8 +54,7 @@ const App: React.FC = () => {
             ))}
 
             <Sidebar>
-                Sidebar
-                {/*Render config*/}
+                {renderDynamicBlockSettings()}
             </Sidebar>
         </StyledApp>
     )

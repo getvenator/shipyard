@@ -1,4 +1,4 @@
-import {Block, BaseSettings, BaseBlockConfig} from "../../types";
+import {Block, BaseBlockConfig, OnChangeValue} from "../../types";
 
 export interface TextBlock extends Block {
     type: 'Text'
@@ -17,7 +17,7 @@ export interface TextBlockConfig extends BaseBlockConfig {
 }
 
 export interface TextBlockSettings extends TextBlockConfig {
-    onChangeValue: (key: keyof TextBlock, value: any) => void
+    onChangeValue: OnChangeValue<TextBlockConfig>
 }
 
 export const isTextBlock = (block: Block): block is TextBlock => block.type === 'Text'
