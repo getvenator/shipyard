@@ -7,6 +7,9 @@ import dts from "vite-plugin-dts"
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), eslint(), dts()],
+  server: {
+    port: 9999,
+  },
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
