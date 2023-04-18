@@ -3,7 +3,7 @@ import styled from "styled-components";
 import {Block, BlockId} from "./types";
 import {Text} from "./blocks";
 import {isTextBlock, TextBlock} from "./blocks/Text/types";
-import { useImmer } from "use-immer";
+import {useImmer} from "use-immer";
 
 const renderDynamicBlock = (block: Block) => {
     if (isTextBlock(block)) {
@@ -35,15 +35,19 @@ const App: React.FC = () => {
 
         if (isTextBlock(block)) {
             return (
-                <Text.Settings onChangeValue={(key, value) => {
-                    setBlocks((draft) => {
-                        const newBlock = draft.find((draftBlock) => draftBlock.id === block.id) as TextBlock;
-                        newBlock.config[key] = value;
-                    });
-                }} {...block.config} />
+                <Text.Settings
+                    onChangeValue={(key, value) => {
+                        // todo: abstract this out
+                        setBlocks((draft) => {
+                            const newBlock = draft.find((draftBlock) => draftBlock.id === block.id) as TextBlock;
+                            newBlock.config[key] = value;
+                        });
+                    }}
+                    {...block.config}
+                />
             )
         }
-    }, [])
+    }, [blocks, setBlocks, settingsBlock])
 
     return (
         <StyledApp>

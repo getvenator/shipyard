@@ -2,10 +2,10 @@ import React, {useId} from "react";
 import {BlockComponents} from "../../types";
 import {TextBlockConfig, TextBlockSettings} from "./types";
 
-const Text: React.FC<TextBlockConfig> & BlockComponents<TextBlockSettings> = () => {
+const Text: React.FC<TextBlockConfig> & BlockComponents<TextBlockSettings> = ({ text }) => {
     return (
         <div>
-            Component
+            { text }
         </div>
     )
 }
@@ -37,6 +37,7 @@ const Settings: React.FC<TextBlockSettings> = (
                 onChange={(event) => onChangeValue('text', event.target.value)}
                 id={textId}
                 type='text'
+                defaultValue={text}
             />
         </div>
     )
