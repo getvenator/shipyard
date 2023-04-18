@@ -4,14 +4,9 @@ import {Block, BlockId} from "./types";
 import {Text} from "./blocks";
 import {isTextBlock, TextBlock} from "./blocks/Text/types";
 import {useImmer} from "use-immer";
-
-const renderDynamicBlock = (block: Block) => {
-    if (isTextBlock(block)) {
-        return <Text {...block.config} />
-    }
-
-    return null;
-}
+import {Html} from "@react-email/html";
+import {Head} from "@react-email/head";
+import {Preview} from "@react-email/preview";
 
 const App: React.FC = () => {
     const [blocks, setBlocks] = useImmer<Block[]>([
@@ -49,13 +44,30 @@ const App: React.FC = () => {
         }
     }, [blocks, setBlocks, settingsBlock])
 
+    const renderEmail = useCallback(() => {
+        const renderedBlocks = blocks.map((block) => {
+            if (isTextBlock(block)) {
+                return <Text {...block.config} />
+            }
+
+            return null;
+        })
+
+        return (
+            <Html lang="en" dir="ltr">
+                <Head />
+                <Preview>
+                    {/*todo*/}
+                    This is a preview of your email
+                </Preview>
+                {renderedBlocks}
+            </Html>
+        )
+    }, [blocks])
+
     return (
         <StyledApp>
-            {blocks.map((block) => (
-                <div key={block.id}>
-                    {renderDynamicBlock(block)}
-                </div>
-            ))}
+            {renderEmail()}
 
             <Sidebar>
                 {renderDynamicBlockSettings()}

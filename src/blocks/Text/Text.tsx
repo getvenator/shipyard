@@ -1,12 +1,13 @@
 import React, {useId} from "react";
 import {BlockComponents} from "../../types";
 import {TextBlockConfig, TextBlockSettings} from "./types";
+import {Text as ReactEmailText} from "@react-email/text";
 
-const Text: React.FC<TextBlockConfig> & BlockComponents<TextBlockSettings> = ({ text }) => {
+const Text: React.FC<TextBlockConfig> & BlockComponents<TextBlockSettings> = ({text}) => {
     return (
-        <div>
-            { text }
-        </div>
+        <ReactEmailText>
+            {text}
+        </ReactEmailText>
     )
 }
 

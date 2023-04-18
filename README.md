@@ -49,3 +49,4 @@ Shipyard is built with:
 - [React](https://reactjs.org/)
 - [Vite](https://vitejs.dev/)
 - [styled-components](https://styled-components.com/)
+- [React Email](https://react.email/)
