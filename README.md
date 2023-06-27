@@ -1,4 +1,4 @@
-![shipyard cover image](assets/cover.jpg "Cover")
+![shipyard cover image](../assets/cover.jpg "Cover")
 
 # Welcome
 Shipyard is a drop-in email builder for your React applications, with a hosted service allowing you to seamlessly plug into your existing Marketing Automation workflow.

@@ -1,14 +1,15 @@
+'use client'
+
 import React, {useCallback, useState} from "react";
 import styled from "styled-components";
-import {Block, BlockId} from "./types";
-import {Text} from "./blocks";
-import {isTextBlock, TextBlock} from "./blocks/Text/types";
+import {Block, BlockId} from "@/types";
+import {Text} from "../blocks";
+import {isTextBlock, TextBlock} from "@/blocks/Text/types";
 import {useImmer} from "use-immer";
-import {Html} from "@react-email/html";
-import {Head} from "@react-email/head";
-import {Preview} from "@react-email/preview";
+import useRenderEmail from "@/hooks/useRenderEmail";
+import {Resend} from "resend";
 
-const App: React.FC = () => {
+export default function Home() {
     const [blocks, setBlocks] = useImmer<Block[]>([
         {
             id: '1',
@@ -19,6 +20,25 @@ const App: React.FC = () => {
         } as TextBlock
     ])
     const [settingsBlock, setSettingsBlock] = useState<BlockId | null>('1')
+    const {renderAsHtml} = useRenderEmail(blocks)
+    const onClickSend = async () => {
+        fetch('/api/send-test-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                html: renderAsHtml(),
+                to: 'gatesofandaron10@gmail.com'
+            }),
+        })
+            .then((response) => response.json())
+            .then((data) => console.log(data))
+            .catch((error) => console.error('Error:', error));
+
+        console.log('success')
+    }
+
 
     const renderDynamicBlockSettings = useCallback(() => {
         const block = blocks.find((block) => block.id === settingsBlock)
@@ -44,34 +64,16 @@ const App: React.FC = () => {
         }
     }, [blocks, setBlocks, settingsBlock])
 
-    const renderEmail = useCallback(() => {
-        const renderedBlocks = blocks.map((block) => {
-            if (isTextBlock(block)) {
-                return <Text {...block.config} />
-            }
-
-            return null;
-        })
-
-        return (
-            <Html lang="en" dir="ltr">
-                <Head />
-                <Preview>
-                    {/*todo*/}
-                    This is a preview of your email
-                </Preview>
-                {renderedBlocks}
-            </Html>
-        )
-    }, [blocks])
-
     return (
         <StyledApp>
-            {renderEmail()}
+            <div dangerouslySetInnerHTML={{__html: renderAsHtml()}}/>
 
-            <Sidebar>
-                {renderDynamicBlockSettings()}
-            </Sidebar>
+            <div>
+                <button onClick={onClickSend}>Send test email</button>
+                <Sidebar>
+                    {renderDynamicBlockSettings()}
+                </Sidebar>
+            </div>
         </StyledApp>
     )
 }
@@ -80,7 +82,6 @@ const StyledApp = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
-  background: #f5f5f5;
   height: 100%;
   justify-content: space-between;
   padding: 12px;
@@ -94,5 +95,3 @@ const Sidebar = styled.div`
   display: flex;
   min-width: 400px;
 `
-
-export default App;
