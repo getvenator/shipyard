@@ -6,12 +6,15 @@ import React from "react";
 import {isTextBlock} from "@/blocks/Text/types";
 import {Text} from "@/blocks";
 import {render} from "@react-email/render";
+import styled from "styled-components";
 
 const useRenderEmail = (blocks: Block[]) => {
     const renderAsReact = () => {
         const renderedBlocks = blocks.map((block) => {
             if (isTextBlock(block)) {
-                return <Text key={block.id} {...block.config} />
+                return (
+                    <Text key={block.id} {...block.config} />
+                )
             }
 
             return null;
@@ -36,10 +39,44 @@ const useRenderEmail = (blocks: Block[]) => {
         })
     }
 
+    const renderPreview = () => {
+        const renderedBlocks = blocks.map((block) => {
+            if (isTextBlock(block)) {
+                return (
+                    <BlockWrapper key={block.id}>
+                        <Text {...block.config} />
+                    </BlockWrapper>
+                )
+            }
+
+            return null;
+        })
+
+        return (
+            <BlocksWrapper>
+                {renderedBlocks}
+            </BlocksWrapper>
+        )
+    }
+
     return {
         renderAsReact,
         renderAsHtml,
+        renderPreview,
     }
 }
+
+const BlocksWrapper = styled.div`
+  width: 100%;
+`
+
+const BlockWrapper = styled.div`
+  width: 100%;
+  border: 1px solid transparent;
+
+  &:hover {
+    border: 1px solid #000;
+  }
+`
 
 export default useRenderEmail

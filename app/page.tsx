@@ -7,7 +7,7 @@ import {Text} from "../blocks";
 import {isTextBlock, TextBlock} from "@/blocks/Text/types";
 import {useImmer} from "use-immer";
 import useRenderEmail from "@/hooks/useRenderEmail";
-import {Resend} from "resend";
+import Button from "@/components/Button";
 
 export default function Home() {
     const [blocks, setBlocks] = useImmer<Block[]>([
@@ -20,7 +20,7 @@ export default function Home() {
         } as TextBlock
     ])
     const [settingsBlock, setSettingsBlock] = useState<BlockId | null>('1')
-    const {renderAsHtml} = useRenderEmail(blocks)
+    const {renderAsHtml, renderPreview} = useRenderEmail(blocks)
     const onClickSend = async () => {
         fetch('/api/send-test-email', {
             method: 'POST',
@@ -65,26 +65,48 @@ export default function Home() {
     }, [blocks, setBlocks, settingsBlock])
 
     return (
-        <StyledApp>
-            <div dangerouslySetInnerHTML={{__html: renderAsHtml()}}/>
+        <>
+            <Navbar>
+                <h2>Shipyard</h2>
+                <Actions>
+                    <Button onClick={onClickSend}><ion-icon name="desktop"></ion-icon></Button>
+                    <Button onClick={onClickSend}><ion-icon name="phone-portrait"></ion-icon></Button>
+                    <Button onClick={onClickSend}><ion-icon name="add"></ion-icon> Add block</Button>
+                    <Button onClick={onClickSend}><ion-icon name="send"></ion-icon> Send test email</Button>
+                </Actions>
+            </Navbar>
+            <StyledApp>
+                {renderPreview()}
 
-            <div>
-                <button onClick={onClickSend}>Send test email</button>
-                <Sidebar>
-                    {renderDynamicBlockSettings()}
-                </Sidebar>
-            </div>
-        </StyledApp>
+                <div>
+                    <Sidebar>
+                        {renderDynamicBlockSettings()}
+                    </Sidebar>
+                </div>
+            </StyledApp>
+        </>
     )
 }
+
+const Navbar = styled.nav`
+  display: flex;
+  width: 100%;
+  height: 60px;
+  background: white;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  padding: 16px;
+  justify-content: space-between;
+  align-items: center;
+`
 
 const StyledApp = styled.div`
   display: flex;
   flex-direction: row;
+  gap: 16px;
   width: 100%;
   height: 100%;
   justify-content: space-between;
-  padding: 12px;
+  padding: 16px;
   box-sizing: border-box;
 `
 
@@ -94,4 +116,14 @@ const Sidebar = styled.div`
   border-radius: 12px;
   display: flex;
   min-width: 400px;
+  padding: 12px 24px 24px 24px;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+`
+
+const Actions = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
 `

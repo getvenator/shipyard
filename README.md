@@ -11,14 +11,10 @@ Shipyard is a drop-in email builder for your React applications, with a hosted s
 - Responsive by default
 - Use our collection of pre-built layouts and components
 - Use our collection of pre-built fully-responsive email templates
-- Integrate into your existing React app (if you're building a SaaS product that sends, well, emails)
 
 ## Next steps
-- [I would like to use Shipyard in my app](#using-shipyard-in-your-app)
 - [I would like to use Shipyard as a standalone tool](#using-shipyard-as-a-standalone-tool)
 - [I would like to contribute](#contributing)
-
-## Using Shipyard in your app
 
 ## Using Shipyard as a standalone tool
 
